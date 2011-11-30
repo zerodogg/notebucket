@@ -1,0 +1,3 @@
+Disable any use of bold fonts
+
+	set t_md=

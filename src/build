@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Basename qw(basename);
+use File::Copy qw(copy);
+use Text::Markdown qw(markdown);
+use Cwd qw(getcwd);
+use utf8;
+
+my $out = '';
+my $subjects = '';
+
+my @categories;
+foreach my $category (<*>)
+{
+	next if ! -d $category;
+	next if $category =~ /(src|build|Various)$/;
+	push(@categories,$category);
+}
+
+push(@categories,getcwd.'/Various');
+
+foreach my $category (@categories)
+{
+	next if ! -d $category;
+	next if $category =~ /(src|build)$/;
+
+	my $cName = basename($category);
+	$cName =~ s/_/ /g;
+	my $catContent = '';
+
+	foreach my $noteF (glob($category.'/*'))
+	{
+		my ($title,$note);
+		next if $noteF =~ /~$/;
+		open(my $i,'<',$noteF);
+
+		while(<$i>)
+		{
+			if (!$title)
+			{
+				chomp;
+				$title = $_;
+			}
+			elsif(/^\s*$/ && !length($note))
+			{
+				next;
+			}
+			else
+			{
+				$note .= $_;
+			}
+		}
+		close($i);
+		next if not length($title);
+		next if not length($note);
+		$catContent .= '<div class="note" data-entry="'.basename($noteF).'">';
+		$catContent .= '<div class="title">'.$title.'</div>';
+		$catContent .= '<div class="content">'.markdown($note).'</div>';
+		$catContent .= '</div>';
+	}
+	next if not length($catContent);
+	next if not length($cName);
+
+	my $baseN = basename($category);
+	$out .= '<div class="section">';
+	$out .= '<div class="catTitle"><a name="'.$baseN.'">'.$cName.'</a></div>';
+	$out .= '<div class="category">'.$catContent.'</div>';
+	$out .= '</div>';
+
+	$subjects .= '<li><a href="#'.$baseN.'">'.$cName.'</a></li>';
+}
+
+my $final;
+
+open(my $o,'<','./src/template.html');
+undef $/;
+$final = <$o>;
+close($o);
+$final =~ s/^\s+//gm;
+$final =~ s/\n/ /g;
+$final =~ s/>\s*/>\n/;
+
+$final =~ s/\s*{{CONTENT}}\s*/$out/;
+$final =~ s/\s*{{SUBJECTS}}\s*/$subjects/;
+open(my $oF,'>','./notes.html');
+print {$oF} $final;
+close($oF);
+
+copy('./src/notes.css','./');
+copy('./src/notes.js','./');

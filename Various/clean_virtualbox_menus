@@ -1,0 +1,3 @@
+VirtualBox: Hide the statusbar and menubar
+
+	VBoxManage setextradata global GUI/Customizations noMenuBar,noStatusBar

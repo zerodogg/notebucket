@@ -1,0 +1,19 @@
+Maildir-indexing for full-text search
+
+`mu` provides a full-text index of maildirs, and can
+easily be used from within mutt. The tool itself is available
+from <http://www.djcbsoftware.nl/code/mu/> (in Debian just
+install maildir-utils).
+
+I use the following cronjobs to generate the index
+
+	# Update mail index every two hours
+	07 */2 * * *              mu index --maildir=~/mail/ --quiet
+	# Remove old search results every morning
+	11 5 * * *                rm -rf "/home/zerodogg/.mu/results"
+
+And the following code inside of mutt, `F7` then lets you enter a
+search query, and `F8` will go to the search results.
+
+	macro index <F7> "<shell-escape>mu find -c -l ~/.mu/results "    "mu find"
+	macro index <F8> "<change-folder-readonly>~/.mu/results\n"       "display mu find results"

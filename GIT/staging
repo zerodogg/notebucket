@@ -1,0 +1,12 @@
+Staging partial commits
+
+Lets you stage only parts of the changes made to a file for
+committing, instead of the entire contents.
+
+	Git add --patch FILE
+	Responses:
+
+	y   yes; stage this change
+	n   no; don't stage this change
+	s   split; cut the change in smaller parts
+	e   edit; manually define the part to split

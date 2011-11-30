@@ -1,0 +1,7 @@
+A simple one-liner REPL
+
+`perl -MData::Dumper -MTerm::ReadLine -e '$r = Term::ReadLine->new(1);while(defined($_ = $r->readline("\$ "))){$ret=Dumper(eval($_));$err=$@;if($err ne ""){print $err;}else{print $ret;}}'`
+
+Alias (ie. for use in .bashrc):
+
+`alias 'perl-repl'='perl -MData::Dumper -MTerm::ReadLine -e '\''$r = Term::ReadLine->new(1);while(defined($_ = $r->readline("\$ "))){$ret=Dumper(eval($_));$err=$@;if($err ne ""){print $err;}else{print $ret;}}'\'''`

@@ -1,0 +1,4 @@
+Nicer KDE apps when running under a GTK-based environment (ie. GNOME)
+
+	kwriteconfig --file kdeglobals --group Icons --key Theme gnome
+	kwriteconfig --file kdeglobals --group General --key widgetStyle gtk

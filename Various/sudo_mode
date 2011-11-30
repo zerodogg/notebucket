@@ -1,0 +1,5 @@
+Enabling "sudo mode" in GNOME
+
+	gconftool -t boolean -s /apps/gksu/sudo-mode true
+	sudo usermod -a -G GROUP [USER]
+Group is 'sudo' on Debian, 'wheel' on Mandriva
