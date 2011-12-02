@@ -1,0 +1,5 @@
+Label a file for adding some time in the future
+
+	git add -N file
+This lets git know that you intend to add a file at some later point.
+This makes the content of the file show up in ie. `git diff`
