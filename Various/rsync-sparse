@@ -1,0 +1,5 @@
+Rsync "sparse" files (aka. files with holes - ie. kvm/qcow images)
+
+Use the `--sparse` parameter for `rsync`. This will let rsync handle
+those files efficiently. Note however that `--sparse` can not be used
+with `--inplace`.
