@@ -64,7 +64,7 @@ foreach my $category (@categories)
 
 	my $baseN = basename($category);
 	$out .= '<div class="section">';
-	$out .= '<div class="catTitle"><a name="'.$baseN.'">'.$cName.'</a></div>';
+	$out .= '<div id="'.$baseN.'" class="catTitle">'.$cName.'</div>';
 	$out .= '<div class="category">'.$catContent.'</div>';
 	$out .= '</div>';
 
@@ -78,7 +78,7 @@ undef $/;
 $final = <$o>;
 close($o);
 $final =~ s/^\s+//gm;
-$final =~ s/\n/ /g;
+$final =~ s/\n//g;
 $final =~ s/>\s*/>\n/;
 
 $final =~ s/\s*{{CONTENT}}\s*/$out/;
