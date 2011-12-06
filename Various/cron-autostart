@@ -1,0 +1,8 @@
+Automatically run a command on boot as a user
+
+`cron` has an `@reboot` "time" that you can use, which makes the command run
+once during boot. This is very handy for running commands after a reboot as a
+user (in particular if you don't have root access and thus can't edit
+/etc/rc.local). Example (in your crontab - `crontab -e`):
+
+	@reboot /home/myuser/initCommand
