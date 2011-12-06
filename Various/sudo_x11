@@ -1,0 +1,5 @@
+sudo with X11 programs
+
+Usually speical tools like `gksudo` does the job fine. However, if that's not
+available (or broken) you can use `sudo XAUTHORITY="$XAUTHORITY"
+DISPLAY="$DISPLAY" [command]` instead.
