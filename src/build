@@ -26,6 +26,7 @@ foreach my $category (@categories)
 	next if $category =~ /(src|build)$/;
 
 	my $cName = basename($category);
+	$cName =~ s{-slash-}{/}g;
 	$cName =~ s/_/ /g;
 	my $catContent = '';
 
@@ -77,8 +78,9 @@ open(my $o,'<','./src/template.html');
 undef $/;
 $final = <$o>;
 close($o);
-$final =~ s/^\s+//gm;
-$final =~ s/\n//g;
+$final =~ s/^\s+/ /gm;
+$final =~ s/\n/ /g;
+$final =~ s/\s+/ /g;
 $final =~ s/>\s*/>\n/;
 
 $final =~ s/\s*{{CONTENT}}\s*/$out/;
