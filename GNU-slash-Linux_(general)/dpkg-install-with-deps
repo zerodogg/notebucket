@@ -1,0 +1,9 @@
+Install a local .deb package (and resolve dependencies)
+
+`apt-get` and `aptitude` can't install local packages, and installation with
+`dpkg -i` will not install any additional dependencies (requiring an additional
+`apt-get install -f` afterwards to resolve the deps).
+
+The `gdebi` tool can install a local .deb package and resolve, download and
+install any dependencies (and in case you're wondering, gdebi is not a
+graphical tool, that's gdebi-gtk, gdebi's gtk front-end).
