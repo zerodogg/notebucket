@@ -1,0 +1,56 @@
+html
+{
+	overflow-y: scroll;
+	font-family: sans-serif;
+}
+body
+{
+	background-color:#D2CFC5;
+}
+.wrapper
+{
+	max-width:700px;
+	margin-left:auto;
+	margin-right:auto;
+}
+.catTitle
+{
+	font-size:18pt;
+	font-weight:bold;
+	padding-bottom:5px;
+}
+.catTitle a
+{
+	cursor:default;
+}
+.category .title
+{
+	font-weight: bold;
+}
+.category .content
+{
+	display:none;
+}
+.catTitle a
+{
+	text-decoration:none;
+}
+.section, .index
+{
+	padding-bottom:1em;
+}
+.introduction
+{
+	max-width:500px;
+}
+a, a:visited, .category .title
+{
+	cursor:pointer;
+	color:black;
+	text-decoration:underline;
+}
+
+.footer
+{
+	font-size:10pt;
+}

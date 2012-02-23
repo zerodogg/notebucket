@@ -8,7 +8,7 @@ use Cwd qw(getcwd);
 use utf8;
 
 my $out = '';
-my $subjects = '';
+my $subjects = '<li><a class="categoryFilter" href="#all">All</a></li>';
 
 my @categories;
 foreach my $category (<*>)
@@ -64,12 +64,13 @@ foreach my $category (@categories)
 	next if not length($cName);
 
 	my $baseN = basename($category);
-	$out .= '<div class="section">';
-	$out .= '<div id="'.$baseN.'" class="catTitle">'.$cName.'</div>';
+	$baseN =~ s/(\(|\))/-/g;
+	$out .= '<div class="section" id="'.$baseN.'">';
+	$out .= '<div class="catTitle">'.$cName.'</div>';
 	$out .= '<div class="category">'.$catContent.'</div>';
 	$out .= '</div>';
 
-	$subjects .= '<li><a href="#'.$baseN.'">'.$cName.'</a></li>';
+	$subjects .= '<li><a class="categoryFilter" href="#'.$baseN.'">'.$cName.'</a></li>';
 }
 
 my $final;
