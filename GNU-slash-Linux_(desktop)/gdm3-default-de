@@ -1,0 +1,5 @@
+GDM3: Set default session/desktop environment in Debian 6 (Squeeze)
+
+Instead of using .dmrc, Debian 6's GDM3 uses `/var/cache/gdm/[USER]/dmrc`.
+Setting your current session to the default one is as simple as running
+`cp ~/.dmrc /var/cache/gdm/$USERNAME/dmrc`.
