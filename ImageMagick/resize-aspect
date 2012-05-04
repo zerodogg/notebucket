@@ -1,0 +1,8 @@
+Resize an image to a fixed size while maintaining the aspect ratio
+
+`convert file.jpg -resize 800x -background white -gravity center -extent 800x600 file-aspect.jpg`
+
+This will pad above/below or to the right/left side of the image with
+the colour specified as `-background`, resize the image to the width or height
+as supplied to `-resize` and force the image to be the size supplied to
+`-extent`.
