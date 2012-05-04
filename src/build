@@ -34,7 +34,7 @@ foreach my $category (@categories)
 	{
 		my ($title,$note);
 		next if $noteF =~ /~$/;
-		open(my $i,'<',$noteF);
+		open(my $i,'<',$noteF) or die('Failed to open '.$noteF.': '.$!."\n");
 
 		while(<$i>)
 		{
@@ -43,7 +43,7 @@ foreach my $category (@categories)
 				chomp;
 				$title = $_;
 			}
-			elsif(/^\s*$/ && !length($note))
+			elsif(/^\s*$/ && (!defined($note) || !length($note)))
 			{
 				next;
 			}
