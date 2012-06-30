@@ -1,0 +1,20 @@
+gpg: Quick and dirty
+
+`gpg` is a powerful encryption tool and can do many useful things, but
+sometimes you just need a simple tool to encrypt and decrypt data
+for yourself.
+
+Start with the following alias (in .zshrc or .bashrc, depending on your shell -
+change to gpg2 if you use gpg2):
+
+    alias gpg='gpg --default-recipient-self'
+This alias makes the default recipient be *you*, so if you don't specify one,
+it will be encrypted for you.
+
+Then to encrypt a file:
+
+    gpg -e FILE
+
+And to decrypt it:
+
+    gpg -d FILE.gpg -o FILE

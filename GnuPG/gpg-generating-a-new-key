@@ -1,0 +1,9 @@
+Generating a new GPG key
+
+Run `gpg --gen-key`, select option 1 (RSA and RSA), enter the maximum key size
+(4096) and then simply follow the rest of the instructions on-screen.
+
+If you intend to use the key for signing you may want to publish it to a
+keyserver with `gpg --keyserver pool.sks-keyservers.net --send-key KEYID` where
+KEYID is the id of the key you just generated. For more in-depth information,
+see the [GnuPG website](http://www.gnupg.org).
