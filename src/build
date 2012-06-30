@@ -84,6 +84,19 @@ $final =~ s/\n/ /g;
 $final =~ s/\s+/ /g;
 $final =~ s/>\s*/>\n/;
 
+{
+    open(my $in,'-|',qw/git log --all/,'--format=%h %ai','-n',1);
+    my $data = <$in>;
+    close($in);
+    chomp($data);
+    $data =~ s/\s+$//;
+
+    (my $rev = $data) =~ s/^(\S+)\s.*/$1/;
+    (my $date = $data) =~ s/^\S+\s+//;
+    $final =~ s/{{GITREV}}/$rev/g;
+    $final =~ s/{{GITDATE}}/$date/g;
+}
+
 $final =~ s/\s*{{CONTENT}}\s*/$out/;
 $final =~ s/\s*{{SUBJECTS}}\s*/$subjects/;
 open(my $oF,'>','./notes.html');
