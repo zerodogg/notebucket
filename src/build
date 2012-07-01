@@ -1,90 +1,42 @@
 #!/usr/bin/perl
+use 5.010;
 use strict;
 use warnings;
-use File::Basename qw(basename);
+use File::Basename qw(basename dirname);
 use File::Copy qw(copy);
 use Text::Markdown qw(markdown);
-use Cwd qw(getcwd);
+use Cwd qw(getcwd realpath);
+use Template::Mustache;
 use utf8;
 
+my $target = './built/';
 my $out = '';
 my $subjects = '<li><a class="categoryFilter" href="#all">All</a></li>';
+my %slurpCache;
 
-my @categories;
-foreach my $category (<*>)
+chdir(dirname(realpath($0)).'/../') or die;
+
+sub printv
 {
-	next if ! -d $category;
-	next if $category =~ /(src|build|Various)$/;
-	push(@categories,$category);
+    if ($ENV{BUILD_VERBOSE})
+    {
+        print shift."\n";
+    }
 }
-
-push(@categories,getcwd.'/Various');
-
-foreach my $category (@categories)
+sub writeFromTemplate
 {
-	next if ! -d $category;
-	next if $category =~ /(src|build)$/;
+    my $template = shift;
+    my $target = shift;
+    my $source = shift;
+    my $replacements = shift;
+    my $out = slurp($template);
+    $out =~ s/^\s+/ /gm;
+    $out =~ s/\n/ /g;
+    $out =~ s/\s+/ /g;
+    $out =~ s/>\s*/>\n/;
 
-	my $cName = basename($category);
-	$cName =~ s{-slash-}{/}g;
-	$cName =~ s/_/ /g;
-	my $catContent = '';
+    printv('Building '.$target.' with '.$template.' from '.$source);
 
-	foreach my $noteF (glob($category.'/*'))
-	{
-		my ($title,$note);
-		next if $noteF =~ /~$/;
-		open(my $i,'<',$noteF) or die('Failed to open '.$noteF.': '.$!."\n");
-
-		while(<$i>)
-		{
-			if (!$title)
-			{
-				chomp;
-				$title = $_;
-			}
-			elsif(/^\s*$/ && (!defined($note) || !length($note)))
-			{
-				next;
-			}
-			else
-			{
-				$note .= $_;
-			}
-		}
-		close($i);
-		next if not length($title);
-		next if not length($note);
-		$catContent .= '<div class="note" data-entry="'.basename($noteF).'">';
-		$catContent .= '<div class="title">'.$title.'</div>';
-		$catContent .= '<div class="content">'.markdown($note).'</div>';
-		$catContent .= '</div>';
-	}
-	next if not length($catContent);
-	next if not length($cName);
-
-	my $baseN = basename($category);
-	$baseN =~ s/(\(|\))/-/g;
-	$out .= '<div class="section" id="'.$baseN.'">';
-	$out .= '<div class="catTitle">'.$cName.'</div>';
-	$out .= '<div class="category">'.$catContent.'</div>';
-	$out .= '</div>';
-
-	$subjects .= '<li><a class="categoryFilter" href="#'.$baseN.'">'.$cName.'</a></li>';
-}
-
-my $final;
-
-open(my $o,'<','./src/template.html');
-undef $/;
-$final = <$o>;
-close($o);
-$final =~ s/^\s+/ /gm;
-$final =~ s/\n/ /g;
-$final =~ s/\s+/ /g;
-$final =~ s/>\s*/>\n/;
-
-{
     open(my $in,'-|',qw/git log --all/,'--format=%h %ai','-n',1);
     my $data = <$in>;
     close($in);
@@ -93,15 +45,117 @@ $final =~ s/>\s*/>\n/;
 
     (my $rev = $data) =~ s/^(\S+)\s.*/$1/;
     (my $date = $data) =~ s/^\S+\s+//;
-    $final =~ s/{{GITREV}}/$rev/g;
-    $final =~ s/{{GITDATE}}/$date/g;
+
+    $replacements->{GITREV}  = $rev;
+    $replacements->{GITDATE} = $date;
+
+
+    foreach my $r (keys %{$replacements})
+    {
+        $out =~ s/{{$r}}/$replacements->{$r}/g;
+    }
+    system('mkdir','-p',dirname($target));
+    open(my $outF,'>',$target);
+    print {$outF} $out;
+    close($outF);
+}
+sub buildPart
+{
+    my $noteF = shift;
+    my $cat = shift;
+    my $catName = shift;
+    my ($title,$note);
+    if ($noteF =~ /~$/)
+    {
+        printv('Skipping '.$noteF);
+        return;
+    }
+    open(my $i,'<',$noteF) or die('Failed to open '.$noteF.': '.$!."\n");
+
+    while(<$i>)
+    {
+        if (!$title)
+        {
+            chomp;
+            $title = $_;
+        }
+        elsif(/^\s*$/ && (!defined($note) || !length($note)))
+        {
+            next;
+            return;
+        }
+        else
+        {
+            $note .= $_;
+        }
+    }
+    close($i);
+    return if not length($title);
+    return if not length($note);
+    writeFromTemplate('./src/note-template.html',$target.$cat.'/'.basename($noteF).'/index.html',$noteF,
+        {
+            NOTE_TITLE => $title,
+            NOTE_CONTENT => markdown($note),
+            CATEGORY_TITLE => $catName,
+        });
+    return '<div class="note"><a href="/'.$cat.'/'.basename($noteF).'" class="title">'.$title.'</a><div class="content"></div></div>';
+}
+sub slurp
+{
+    my $file = shift;
+    if ($slurpCache{$file})
+    {
+        return $slurpCache{$file};
+    }
+    local $/ = undef;
+    open(my $i,'<',$file);
+    my $content = <$i>;
+    close($i);
+    $slurpCache{$file} = $content;
+    return $content;
 }
 
-$final =~ s/\s*{{CONTENT}}\s*/$out/;
-$final =~ s/\s*{{SUBJECTS}}\s*/$subjects/;
-open(my $oF,'>','./notes.html');
-print {$oF} $final;
-close($oF);
+my @categories;
+foreach my $category (<*>)
+{
+	next if ! -d $category;
+	next if $category =~ /(src|buil[dt]|Various)$/;
+	push(@categories,$category);
+}
 
-copy('./src/notes.css','./');
-copy('./src/notes.js','./');
+push(@categories,getcwd.'/Various');
+
+foreach my $category (@categories)
+{
+	next if ! -d $category;
+	next if $category =~ /(src|buil[dt])$/;
+
+	my $cName = basename($category);
+	$cName =~ s{-slash-}{/}g;
+	$cName =~ s/_/ /g;
+	my $catContent = '';
+	my $baseN = basename($category);
+	$baseN =~ s/(\(|\))/-/g;
+
+	next if not length($cName);
+	foreach my $noteF (glob($category.'/*'))
+	{
+        $catContent .= buildPart($noteF,$baseN,$cName) // '';
+	}
+	next if not length($catContent);
+
+	$out .= '<div class="section" id="'.$baseN.'">';
+	$out .= '<div class="catTitle">'.$cName.'</div>';
+	$out .= '<div class="category">'.$catContent.'</div>';
+	$out .= '</div>';
+
+	$subjects .= '<li><a class="categoryFilter" href="#'.$baseN.'">'.$cName.'</a></li>';
+}
+
+writeFromTemplate('./src/main-template.html',$target.'index.html','(all)',{
+        CONTENT => $out,
+        SUBJECTS => $subjects,
+    });
+
+copy('./src/notes.css',$target);
+copy('./src/notes.js',$target);

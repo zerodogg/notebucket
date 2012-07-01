@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<link type="text/css" rel="stylesheet" href="/notes.css" />
+		<title>Notes</title>
+	</head>
+	<body>
+		<div class="wrapper subpage">
+			<div class="index">
+                <h1>Notes - {{CATEGORY_TITLE}}</h1>
+                <a href="/">Return to note list</a>
+			</div>
+            <div class="noteContent">
+                <div class="section" id="CSS">
+                    <div class="category">
+                        <div class="note" data-entry="cursor">
+                            <div class="title">{{NOTE_TITLE}}</div>
+                            <div id="notecontent" class="content">
+                                {{NOTE_CONTENT}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="footer">notes.zerodogg.org - Copyright &copy; <a href="http://random.zerodogg.org/">Eskild Hustvedt</a><br />
+				<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License</a><br />
+                Built from notebucket revision <a href="https://github.com/zerodogg/notebucket/commit/{{GITREV}}">{{GITREV}}</a>. Updated on {{GITDATE}}. <a href="https://github.com/zerodogg/notebucket">Fork it on github</a>
+			</div>
+		</div>
+		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script src="notes.js"></script>
+	</body>
+</html>

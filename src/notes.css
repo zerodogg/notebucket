@@ -27,6 +27,10 @@ body
 {
 	font-weight: bold;
 }
+.category #notecontent
+{
+    display:block;
+}
 .category .content
 {
 	display:none;

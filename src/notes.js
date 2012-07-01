@@ -23,8 +23,10 @@
         /*
          * Show/hide content when a title is clicked
          */
-        $('.category .title').click(function()
+        $('.category .title').click(function(e)
         {
+            e.preventDefault();
+
             var $this = $(this);
             var $parent = $this.parent().find('.content, .category').first();
             if ($parent.is(':hidden'))
@@ -33,39 +35,30 @@
                  * top of it is visible */
                 $('body, html').animate({ scrollTop: $this.offset().top}, 400);
             }
-            $parent.slideToggle();
-            /* Set the hash parameter so that linking works */
-            var entryT = $this.parent('.note').data('entry');
-            if(entryT != null)
+            if($parent.html() == '')
             {
-                window.location.href = '#'+entryT;
+                $parent.load($this.attr('href')+' #notecontent',function()
+                {
+                    $parent.slideToggle();
+                });
+            }
+            else
+            {
+                $parent.slideToggle();
+            }
+            if(history)
+            {
+                if(window.location.pathname != $this.attr('href'))
+                {
+                    history.pushState(null,null,$this.attr('href'));
+                }
             }
         });
-
-        /*
-         * Scroll to an existing item if a hash parameter is supplied
-         */
-        if (/#/.test(location.href))
+        if(history)
         {
-            var entry = location.href.replace(/^[^#]+#/,'');
-            var found = false;
-            $('.note').each(function()
+            window.onpopstate = function(ev)
             {
-                if($(this).data('entry') == entry)
-                {
-                    $(this).find('.title').click();
-                    found = true;
-                    return false;
-                }
-            });
-            if (!found)
-            {
-                if ($('.section:#'+entry).length)
-                {
-                    $('.section:not(#'+entry+')').hide();
-                    $('#'+entry).show();
-                }
-            }
+            };
         }
     });
 })(jQuery);
