@@ -1,6 +1,6 @@
-Detach a process from its terminal in bash
+Detach a process from its terminal in bash/zsh
 
-Bash has very powerful job control with its `Ctrl-Z`, `fg` and `bg`
+Bash/ZSH has very powerful job control with its `Ctrl-Z`, `fg` and `bg`
 commands. A lesser known (but equally powerful) feature is `disown`. `disown`
 will detach a process from its controlling terminal, allowing it to continue
 running after you have exited your terminal.
