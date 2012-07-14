@@ -1,0 +1,34 @@
+HOWTO: Using GNOME3 without pulseaudio in Debian 7 (Wheezy)
+
+**WARNING**: This is completely unsupported. It could *completely break your
+system*, and you will probably not get any help from Debian voulenteers or the
+Debian GNOME maintainers. I do not take any responsibility from any issues or
+data loss caused by this procedure. **PROCEED AT YOUR OWN RISK**.
+
+**DO NOT report GNOME3 bugs after having used this procedure** until after
+you have reverted back to the official install with pulseaudio, and verified
+that the issue remains.
+
+*Note:* I have on purpose assumed a certain level of knowledge in the
+instructions below. If you can't understand them, then you shouldn't be doing
+this.
+
+The first step is to get a replacement pulseaudio package. This is because
+the GNOME packages depend upon the pulsaudio package, and won't let you have it
+installed unless a pulseaudio package is present. You can create it with
+the tools found in the `equivs`-package. For convenience I have uploaded
+one, you can download it from
+[http://zarb.org/~zerodogg/pulseaudio_2.0_all.deb](http://zarb.org/~zerodogg/pulseaudio_2.0_all.deb)
+(it is signed with
+[my gpg key](http://pool.sks-keyservers.net:11371/pks/lookup?op=get&search=0xD76A12A07374A722)).
+
+After that package has been installed, you're essentially pulseaudio-free
+(after you kill any existing pulseaudio-processes, which you should do now). To
+get a volume control back in GNOME, install the `volumeicon-alsa`-package. Then
+install the [Evil Status Icon
+Forever](https://extensions.gnome.org/extension/99/evial-status-icon-forerver/)
+GNOME-extension. Now edit
+`~/.local/share/gnome-shell/extensions/EvilStatusIconForever@bone.twbbs.org.tw/extension.js`
+adding `'volumeicon'` to the `notification`-array. Finally, log out and then
+back in (or start volumeicon, then restart gnome-shell).  You should now have a
+simple volume icon in the shell, and be running without pulseaudio.
