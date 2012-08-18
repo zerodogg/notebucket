@@ -1,0 +1,8 @@
+Use xz for logrotate
+
+Add the following to /etc/logrotate.conf to use xz instead of gzip for
+compressed logfiles:
+
+    compresscmd /usr/bin/xz
+    uncompresscmd /usr/bin/unxz
+    compressext .xz
