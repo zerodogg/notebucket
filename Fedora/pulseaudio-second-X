@@ -1,0 +1,12 @@
+Using pulseaudio on a second X server (on Fedora 18)
+
+If you want to run a secondary X server (ie. for gaming), you may run into
+audio troubles. There are several ways to fix it, the one I'm presenting here
+is the "easy, but hacky" version. It may have side-effects, and you will likely
+need to reverse it if you want support from the Fedora community.
+
+First, add your user into the "`audio`" group. This will let your user write
+directly to your audio device.
+
+Second, add `pax11publish -r` to the top of the startup script for your
+secondary X server.  This will ensure you get a fresh pulseaudio server.
