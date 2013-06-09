@@ -1,0 +1,17 @@
+Using wine on Fedora with SELinux enabled
+
+SELinux might become very unhappy if you try to run wine, but there's no reason
+to disable SELinux. You just need to tweak some SELinux booleans.
+
+First, the one you most likely want is to set the `wine_mmap_zero_ignore`
+
+    sudo setsebool -P wine_mmap_zero_ignore 1
+
+See `man wine_selinux` for more information about `wine_mmap_zero_ignore`.
+
+Second another one you may encounter, which is more invasive is `mmap_low_allowed`,
+see [this bugreport on the Fedora bugzilla](https://bugzilla.redhat.com/show_bug.cgi?id=527147)
+for a discussion on the issue, and [this wiki article on winehq](http://wiki.winehq.org/PreloaderPageZeroProblem)
+for information about it from wine's perspective. To enable it, run:
+
+    sudo setsebool -P mmap_low_allowed 1

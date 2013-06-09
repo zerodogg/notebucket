@@ -1,0 +1,8 @@
+Using screen-bce on Fedora
+
+Turning on bce in screen avoids padding the screen with trailing spaces,
+which makes copy+paste a lot simpler. It does not work simply by turning
+bce on, however, it also needs a termcap that tells the applications
+about this. In Fedora, this termcap isn't installed by default, you need
+to install the `ncurses-term` package, once you do everything starts working
+(to turn bce on add `defbce on` and `term screen-bce` to your `screenrc`).
