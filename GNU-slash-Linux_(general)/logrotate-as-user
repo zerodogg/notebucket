@@ -1,0 +1,7 @@
+Logrotate as a user
+
+Logrotate can be used as a user by supplying the `--state` (`-s`) parameter,
+which specifies an alternate location for the logrotate state file. Ie.
+`logrotate --state ~/.logrotate.state ~/.logrotate.conf` where
+~/.logrotate.conf is your custom logrotate config file (which uses the same
+syntax as /etc/logrotate.conf).
