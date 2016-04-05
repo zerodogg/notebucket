@@ -1,0 +1,3 @@
+Disable HTML5 video in Epiphany/Webkit2
+
+There's no way to actually disable video support without recompiling, but you can trick gstreamer into thinking there are no video support plugins installed, which essentially allows you to disable video since the browser only tries to load videos if gstreamer tells it that the format is supported. No formats available in gstreamer, no video. You do this by setting the `GST_PLUGIN_SYSTEM_PATH_1_0` environment variable to a path that has no gstreamer plugins in it. For instance `GST_PLUGIN_SYSTEM_PATH_1_0=/root` (which is usually unreadable for users) or `GST_PLUGIN_SYSTEM_PATH_1_0=~/.does-not-exist`.
